@@ -138,8 +138,6 @@ El monitor detiene la simulación poniendo running = 0 bajo mutex y luego hace b
 
 - Programming with POSIX Threads – David R. Butenhof
 
-- Material del campus 42 sobre sincronización y condiciones de carrera.
-
 ### Uso de inteligencia artificial
 
 Durante el desarrollo se ha utilizado IA para:
@@ -147,7 +145,5 @@ Durante el desarrollo se ha utilizado IA para:
 - Generar ejemplos de estructuras de datos para las colas de espera.
 
 - Revisar la lógica de prevención de deadlocks en la adquisición ordenada de dongles.
-
-- Redactar comentarios y mensajes de depuración.
-
+  
 - Obtener sugerencias sobre el manejo de pthread_cond_timedwait con tiempos absolutos.
