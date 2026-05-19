@@ -12,8 +12,6 @@
 
 #include "codexion.h"
 
-#include "codexion.h"
-
 static void	enqueue_fifo(t_dongle *d, t_wait_node *node)
 {
 	if (!d->wait_head)

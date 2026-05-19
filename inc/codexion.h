@@ -124,13 +124,11 @@ void		destroy_dongles(t_dongle *dongles, int count);
 int			dongle_take(t_dongle *d, t_coder *coder);
 void		dongle_release(t_dongle *d, t_config *cfg, t_shared *shared,
 				int coder_id);
-void		dongle_release(t_dongle *d, t_config *cfg, t_shared *shared,
-				int coder_id);
-int			dongle_take(t_dongle *d, t_coder *coder);
 
 int			init_coders(t_coder **coders, t_dongle *dongles,
 				t_config *cfg, t_shared *shared);
 void		destroy_coders(t_coder *coders, int count);
+int			compile_done_reached(t_coder *coder);
 void		*coder_routine(void *arg);
 
 int			init_monitor(t_monitor *mon, t_sim *sim);

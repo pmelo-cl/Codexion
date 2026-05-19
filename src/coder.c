@@ -63,9 +63,11 @@ static int	try_compile(t_coder *coder)
 		return (0);
 	}
 	now = get_abs_time_ms() - coder->cfg->start_time;
-	coder_set_state(coder, STATE_COMPILING);
 	coder->last_compile_start = now;
+	pthread_mutex_lock(&coder->state_mutex);
+	coder->state = STATE_COMPILING;
 	coder->compiles_done++;
+	pthread_mutex_unlock(&coder->state_mutex);
 	print_log(coder->shared, coder->cfg->start_time,
 		coder->id, "is compiling");
 	ms_sleep(coder->cfg->time_to_compile);
@@ -83,7 +85,7 @@ void	*coder_routine(void *arg)
 	{
 		if (!try_compile(coder))
 			break ;
-		if (coder->compiles_done >= coder->cfg->compiles_required)
+		if (compile_done_reached(coder))
 			break ;
 		if (!is_running(coder))
 			break ;

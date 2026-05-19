@@ -18,31 +18,25 @@ void	destroy_monitor(t_monitor *mon)
 		return ;
 	pthread_mutex_destroy(&mon->mutex);
 	pthread_cond_destroy(&mon->cond);
-	free(mon);
 }
 
 int	init_monitor(t_monitor *mon, t_sim *sim)
 {
 	if (!mon || !sim)
-		return (1);
-
+		return (0);
 	*mon = (t_monitor){0};
-
 	mon->coders = sim->coders;
 	mon->dongles = sim->dongles;
 	mon->cfg = &sim->cfg;
 	mon->shared = &sim->shared;
-
 	if (pthread_mutex_init(&mon->mutex, NULL) != 0)
-		return (1);
-
+		return (0);
 	if (pthread_cond_init(&mon->cond, NULL) != 0)
 	{
 		pthread_mutex_destroy(&mon->mutex);
-		return (1);
+		return (0);
 	}
-
-	return (0);
+	return (1);
 }
 
 void	*monitor_routine(void *arg)

@@ -51,3 +51,13 @@ void	destroy_coders(t_coder *coders, int count)
 	}
 	free(coders);
 }
+
+int	compile_done_reached(t_coder *coder)
+{
+	int	done;
+
+	pthread_mutex_lock(&coder->state_mutex);
+	done = coder->compiles_done >= coder->cfg->compiles_required;
+	pthread_mutex_unlock(&coder->state_mutex);
+	return (done);
+}

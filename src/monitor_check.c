@@ -15,11 +15,15 @@
 int	all_completed(t_monitor *mon)
 {
 	int	i;
+	int	done;
 
 	i = 0;
 	while (i < mon->cfg->num_coders)
 	{
-		if (mon->coders[i].compiles_done < mon->cfg->compiles_required)
+		pthread_mutex_lock(&mon->coders[i].state_mutex);
+		done = mon->coders[i].compiles_done;
+		pthread_mutex_unlock(&mon->coders[i].state_mutex);
+		if (done < mon->cfg->compiles_required)
 			return (0);
 		i++;
 	}
