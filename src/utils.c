@@ -16,23 +16,13 @@ long long	get_abs_time_ms(void)
 {
 	struct timeval	tv;
 
-	if (gettimeofday(&tv, NULL) != 0)
-	{
-		perror("gettimeofday");
-		exit(EXIT_FAILURE);
-	}
+	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000LL + tv.tv_usec / 1000);
 }
 
 void	ms_sleep(int ms)
 {
-	struct timespec	req;
-	struct timespec	rem;
-
-	req.tv_sec = ms / 1000;
-	req.tv_nsec = (ms % 1000) * 1000000;
-	while (nanosleep(&req, &rem) == -1 && errno == EINTR)
-		req = rem;
+	usleep(ms * 1000);
 }
 
 void	get_abs_timespec(struct timespec *ts, long long timeout_ms)

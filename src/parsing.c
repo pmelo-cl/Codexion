@@ -11,17 +11,27 @@
 /* ************************************************************************** */
 
 #include "codexion.h"
-#include <limits.h>
 
 static int	is_valid_int(const char *str, int *value)
 {
-	char	*endptr;
-	long	val;
+	int	i;
+	int	val;
 
-	val = strtol(str, &endptr, 10);
-	if (*endptr != '\0' || val < 0 || val > INT_MAX)
+	i = 0;
+	if (!str || !str[0])
 		return (0);
-	*value = (int)val;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	if (i > 10)
+		return (0);
+	val = atoi(str);
+	if (val < 0)
+		return (0);
+	*value = val;
 	return (1);
 }
 
@@ -41,7 +51,7 @@ static int	parse_positive(char *arg, int *dst, char *msg, int limit)
 static int	parse_args_values(char **argv, t_config *cfg)
 {
 	if (!parse_positive(argv[1], &cfg->num_coders,
-			"Error: num_coders must be >= 2\n", 2))
+			"Error: num_coders must be >= 1\n", 1))
 		return (0);
 	if (!parse_positive(argv[2], &cfg->time_to_burnout,
 			"Error: time_to_burnout must be > 0", 1))

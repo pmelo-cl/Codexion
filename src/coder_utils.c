@@ -61,3 +61,13 @@ int	compile_done_reached(t_coder *coder)
 	pthread_mutex_unlock(&coder->state_mutex);
 	return (done);
 }
+
+int	is_running(t_coder *coder)
+{
+	int	running;
+
+	pthread_mutex_lock(&coder->shared->running_mutex);
+	running = coder->shared->running;
+	pthread_mutex_unlock(&coder->shared->running_mutex);
+	return (running);
+}

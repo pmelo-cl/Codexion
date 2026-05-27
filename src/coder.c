@@ -37,31 +37,10 @@ static void	take_ordered_dongles(t_coder *coder,
 	}
 }
 
-static int	is_running(t_coder *coder)
+static int	do_compile(t_coder *coder, t_dongle *d1, t_dongle *d2)
 {
-	int	running;
-
-	pthread_mutex_lock(&coder->shared->running_mutex);
-	running = coder->shared->running;
-	pthread_mutex_unlock(&coder->shared->running_mutex);
-	return (running);
-}
-
-static int	try_compile(t_coder *coder)
-{
-	t_dongle	*d1;
-	t_dongle	*d2;
 	long long	now;
 
-	coder_set_state(coder, STATE_IDLE);
-	take_ordered_dongles(coder, &d1, &d2);
-	if (!dongle_take(d1, coder))
-		return (0);
-	if (!dongle_take(d2, coder))
-	{
-		dongle_release(d1, coder->cfg, coder->shared, coder->id);
-		return (0);
-	}
 	now = get_abs_time_ms() - coder->cfg->start_time;
 	coder->last_compile_start = now;
 	pthread_mutex_lock(&coder->state_mutex);
@@ -72,8 +51,26 @@ static int	try_compile(t_coder *coder)
 		coder->id, "is compiling");
 	ms_sleep(coder->cfg->time_to_compile);
 	dongle_release(d1, coder->cfg, coder->shared, coder->id);
-	dongle_release(d2, coder->cfg, coder->shared, coder->id);
+	if (d1 != d2)
+		dongle_release(d2, coder->cfg, coder->shared, coder->id);
 	return (1);
+}
+
+static int	try_compile(t_coder *coder)
+{
+	t_dongle	*d1;
+	t_dongle	*d2;
+
+	coder_set_state(coder, STATE_IDLE);
+	take_ordered_dongles(coder, &d1, &d2);
+	if (!dongle_take(d1, coder))
+		return (0);
+	if (d1 != d2 && !dongle_take(d2, coder))
+	{
+		dongle_release(d1, coder->cfg, coder->shared, coder->id);
+		return (0);
+	}
+	return (do_compile(coder, d1, d2));
 }
 
 void	*coder_routine(void *arg)

@@ -19,7 +19,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <time.h>
-# include <errno.h>
+# include <unistd.h>
 
 # define SCHED_FIFO_TYPE 0
 # define SCHED_EDF_TYPE  1
@@ -129,6 +129,7 @@ int			init_coders(t_coder **coders, t_dongle *dongles,
 				t_config *cfg, t_shared *shared);
 void		destroy_coders(t_coder *coders, int count);
 int			compile_done_reached(t_coder *coder);
+int			is_running(t_coder *coder);
 void		*coder_routine(void *arg);
 
 int			init_monitor(t_monitor *mon, t_sim *sim);
